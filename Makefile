@@ -1,2 +1,2 @@
-userinput: src/main.c src/userinput.c
-	cc -o bin/userinput.o src/main.c src/userinput.c
+game: src/main.c src/userinput.c src/board.c
+	cc -o bin/game.o src/main.c src/userinput.c src/board.c
