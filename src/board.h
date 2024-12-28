@@ -7,7 +7,7 @@ typedef struct brd {
 	char **data;
 } * board_t;
 
-typedef enum fld_disp {
+typedef enum fld {
 	ACTIVE = ' ',
 	ONE = '1',
 	TWO = '2',
@@ -20,7 +20,7 @@ typedef enum fld_disp {
 	FLAGGED = 'F',
 	EMPTY = 'X',
 	MINE = 'o'
-} fld_disp_t;
+} fld_t;
 
 board_t create_board( int n_row, int n_col );
 
