@@ -19,9 +19,13 @@ int main() {
 	display_board( game->pos_x, game->pos_y, game->board_core );
 	while( ESC != (command = read_command()) ) {
 		
-		take_command( game, command );
-
-		display_board( game->pos_x, game->pos_y, game->board_core );
+		if( 0 == execute_command( game, command ) ) {
+			display_board( game->pos_x, game->pos_y, game->board_core );
+		} else {
+			display_board( game->pos_x, game->pos_y, game->board_core );
+			printf( "PRZEGRANA!!!\n" );
+			break;
+		}
 	}
 
 	

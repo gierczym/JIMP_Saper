@@ -71,7 +71,7 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	return game;
 }
 
-void take_command( game_t game, enum command_t command ) {
+int execute_command( game_t game, enum command_t command ) {
 	if( LEFT == command )
 		game->pos_y--;
 	if( RIGHT == command )
@@ -101,5 +101,12 @@ void take_command( game_t game, enum command_t command ) {
 			game->init_flag = 1;
 			generate_mines( game );
 		}
+		if( ACTIVE == game->board_view->data[game->pos_x][game->pos_x] )
+			if( MINE == game->board_core->data[game->pos_x][game->pos_x] ) {
+				game->board_view->data[game->pos_x][game->pos_x] = 'M';
+				return -1;
+			}
 	}
+
+	return 0;
 }

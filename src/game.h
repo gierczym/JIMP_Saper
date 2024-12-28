@@ -18,6 +18,6 @@ void generate_mines( game_t game );
 
 game_t initialize_game( int board_size_x, int board_size_y, int n_mines);
 
-void take_command( game_t game, enum command_t command );
+int execute_command( game_t game, enum command_t command );
 
 #endif
