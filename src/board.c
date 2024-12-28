@@ -82,26 +82,26 @@ void print_belt( int n_col, int pos_y, int color_flag ) {
 void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	
 	if( color_flag )
-		SET_COLOR_GREEN
-
+		SET_COLOR_GREEN;
 	printf( "%2d", pos_x+1 );
+	SET_COLOR_DEFAULT
 	if( 0 == pos_y ) {
 		SET_COLOR_GREEN
 		printf( "|" );
-		if( !color_flag)
-			SET_COLOR_DEFAULT
+		SET_COLOR_DEFAULT
 	} else {
 		printf( "|" );
 	}
 
 	int j;
 	for( j = 0; j < board->n_col; j++ ) {
+		if( (j == pos_y) && color_flag )
+			SET_COLOR_GREEN
 		printf(" %c", board->data[pos_x][j] );
 		if( (j == pos_y-1) || (j == pos_y) )
 			SET_COLOR_GREEN;
 		printf( "|" );
-		if( !color_flag )
-			SET_COLOR_DEFAULT;
+		SET_COLOR_DEFAULT
 	}
 
 	printf( "\n" );	

@@ -44,6 +44,59 @@ void generate_mines( game_t game ) {
 
 }
 
+
+int is_mine( int pos_x, int pos_y, board_t board ) {
+	if( (pos_x < 0) || (pos_x >= board->n_row) ||
+	    (pos_y < 0) || (pos_y >= board->n_col) )
+		return 0;
+	if( MINE == board->data[pos_x][pos_y] ) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+void generate_indicators( game_t game ) {
+
+	int board_size_x = game->board_size_x;
+	int board_size_y = game->board_size_y;
+	board_t board = game->board_core;
+	char **data = board->data;
+
+	int i;
+	int j;
+	int mine_ctr;
+	for( i = 0; i < board_size_x; i++ ) {
+		for( j = 0; j < board_size_y; j++ ) {
+			mine_ctr = 0;
+			if( MINE == data[i][j])
+				continue;
+			if( is_mine( i-1, j-1, board ) )
+				mine_ctr++;
+			if( is_mine( i-1, j, board ) )
+				mine_ctr++;
+			if( is_mine( i-1, j+1, board ) )
+				mine_ctr++;
+			if( is_mine( i, j-1, board ) )
+				mine_ctr++;
+			if( is_mine( i, j+1, board ) )
+				mine_ctr++;
+			if( is_mine( i+1, j-1, board ) )
+				mine_ctr++;
+			if( is_mine( i+1, j, board ) )
+				mine_ctr++;
+			if( is_mine( i+1, j+1, board ) )
+				mine_ctr++;
+			if( 0 == mine_ctr ) {
+				data[i][j] = EMPTY;
+			} else {
+				data[i][j] = '0' + mine_ctr;
+			}
+		}
+	}
+
+}
+
 game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 
 	game_t game = malloc( sizeof * game );
@@ -100,10 +153,11 @@ int execute_command( game_t game, enum command_t command ) {
 		if( !game->init_flag) {
 			game->init_flag = 1;
 			generate_mines( game );
+			generate_indicators( game );
 		}
-		if( ACTIVE == game->board_view->data[game->pos_x][game->pos_x] )
-			if( MINE == game->board_core->data[game->pos_x][game->pos_x] ) {
-				game->board_view->data[game->pos_x][game->pos_x] = 'M';
+		if( ACTIVE == game->board_view->data[game->pos_x][game->pos_y] )
+			if( MINE == game->board_core->data[game->pos_x][game->pos_y] ) {
+				game->board_view->data[game->pos_x][game->pos_y] = 'M';
 				return -1;
 			}
 	}
