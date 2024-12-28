@@ -83,5 +83,8 @@ void display_command( enum command_t command) {
 		case ESC:
 			printf("ESC\n");
 			break;
+		case MISC:
+			printf("MISC\n");
+			break;
 	}
 }
