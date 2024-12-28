@@ -59,7 +59,7 @@ board_t create_board( int n_row, int n_col ) {
 	return board;
 }
 
-void print_belt( int n_col, int pos_y, int color_flag ) {
+void print_belt( int n_col, int color_flag ) {
 
 	printf( "   " ); // 3 empty characters
 	
@@ -68,11 +68,26 @@ void print_belt( int n_col, int pos_y, int color_flag ) {
 
 	int i;
 	for( i = 0; i < n_col; i++ ) {
-		if( i == pos_y )
-			SET_COLOR_GREEN
 		printf( "---" );
-		if( !color_flag )
-			SET_COLOR_DEFAULT
+	}
+	printf( "\n" );
+
+	SET_COLOR_DEFAULT;
+}
+
+void print_belt_partial( int n_col, int pos_y ) {
+
+	printf( "   " ); // 3 empty characters
+	
+	SET_COLOR_GREEN;
+
+	int i;
+	for( i = 0; i < n_col; i++ ) {
+		if( i == pos_y ) {
+			printf( "-- " );
+		} else {
+			printf( "   " );
+		}
 	}
 	printf( "\n" );
 
@@ -98,9 +113,12 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 		if( (j == pos_y) && color_flag )
 			SET_COLOR_GREEN
 		printf(" %c", board->data[pos_x][j] );
-		if( (j == pos_y-1) || (j == pos_y) )
+		if( ((j == pos_y-1) || (j == pos_y)) && color_flag ) {
 			SET_COLOR_GREEN;
-		printf( "|" );
+			printf( "|" );
+		} else {
+			printf( " " );
+		}
 		SET_COLOR_DEFAULT
 	}
 
@@ -142,9 +160,9 @@ void display_board( int pos_x, int pos_y, board_t board ) {
 	//
 	// print upper belt
 	if( 0 == pos_x) {
-		print_belt( board->n_col, pos_y, 1 );
+		print_belt( board->n_col, 1 );
 	} else {
-		print_belt( board->n_col, pos_y, 0 );
+		print_belt( board->n_col, 0 );
 	}
 
 	//
@@ -155,11 +173,11 @@ void display_board( int pos_x, int pos_y, board_t board ) {
 		} else {
 			print_row( i, pos_y, board, 0 );
 		}
-		if( (i == pos_x-1) || (i == pos_x) ) {
-			print_belt( board->n_col, pos_y, 1 );
+		if( (i == pos_x-1) || (i == pos_x) ) { 
+			print_belt_partial( board->n_col, pos_y );
 		} else {
-			print_belt( board->n_col, pos_y, 0 );
-		}	
+			printf( "\n" );
+		}
 	} 
 
 }
