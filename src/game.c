@@ -33,7 +33,7 @@ void generate_mines( game_t game ) {
 		//
 		// current position and adjacent fields ar forbidden
 		// (it is needed to increase the user experience)
-		if( ((pos_x >=  game->pos_x-1) && (pos_x <= game->pos_x+1)) || ((pos_y >=  game->pos_y-1) && (pos_y <= game->pos_y+1)))
+		if( ((pos_x >=  game->pos_x-1) && (pos_x <= game->pos_x+1)) && ((pos_y >=  game->pos_y-1) && (pos_y <= game->pos_y+1)))
 			continue;
 
 		if( ACTIVE == game->board_core->data[pos_x][pos_y] ) {
