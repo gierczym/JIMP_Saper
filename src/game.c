@@ -124,6 +124,34 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	return game;
 }
 
+int is_active( int pos_x, int pos_y, board_t board ) {
+	if( (pos_x < 0) || (pos_x >= board->n_row) ||
+	    (pos_y < 0) || (pos_y >= board->n_col) )
+		return 0;
+	if(  ACTIVE == board->data[pos_x][pos_y] ) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+void reveal_indicators( int pos_x, int pos_y, game_t game ) {
+	if( !is_active( pos_x, pos_y, game->board_view) )
+		return;
+	
+	game->board_view->data[pos_x][pos_y] = game->board_core->data[pos_x][pos_y];
+	if( game->board_view->data[pos_x][pos_y] != EMPTY )
+		return;
+	reveal_indicators( pos_x-1, pos_y-1, game );
+	reveal_indicators( pos_x-1, pos_y, game );
+	reveal_indicators( pos_x-1, pos_y+1, game );
+	reveal_indicators( pos_x, pos_y-1, game );
+	reveal_indicators( pos_x, pos_y+1, game );
+	reveal_indicators( pos_x+1, pos_y-1, game );
+	reveal_indicators( pos_x+1, pos_y, game );
+	reveal_indicators( pos_x+1, pos_y+1, game );
+}
+
 int execute_command( game_t game, enum command_t command ) {
 	if( LEFT == command )
 		game->pos_y--;
@@ -160,6 +188,7 @@ int execute_command( game_t game, enum command_t command ) {
 				game->board_view->data[game->pos_x][game->pos_y] = 'M';
 				return -1;
 			}
+			reveal_indicators( game->pos_x, game->pos_y, game );
 	}
 
 	return 0;

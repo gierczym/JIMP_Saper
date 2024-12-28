@@ -20,7 +20,7 @@ int main() {
 	while( ESC != (command = read_command()) ) {
 		
 		if( 0 == execute_command( game, command ) ) {
-			display_board( game->pos_x, game->pos_y, game->board_core );
+			display_board( game->pos_x, game->pos_y, game->board_view );
 		} else {
 			display_board( game->pos_x, game->pos_y, game->board_core );
 			printf( "PRZEGRANA!!!\n" );
