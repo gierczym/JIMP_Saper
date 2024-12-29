@@ -11,6 +11,7 @@ int main( int argc, char *argv[]) {
 	int board_size_x = 9;
 	int board_size_y = 9;
 	int n_mines = 10;
+	int res;
 	enum command_t command; 
 
 	game_t game = initialize_game( board_size_x, board_size_y, n_mines );
@@ -20,9 +21,13 @@ int main( int argc, char *argv[]) {
 
 	display_board( game->pos_x, game->pos_y, game->board_core );
 	while( ESC != (command = read_command()) ) {
-		
-		if( 0 == execute_command( game, command ) ) {
+		res = execute_command( game, command ); 
+		if( 0 == res ) {
 			display_board( game->pos_x, game->pos_y, game->board_view );
+		} else if( 1 == res ) {
+			display_board( game->pos_x, game->pos_y, game->board_view );
+			printf( "WYGRANA!!!\n" );
+			break;
 		} else {
 			display_board( game->pos_x, game->pos_y, game->board_core );
 			printf( "PRZEGRANA!!!\n" );
