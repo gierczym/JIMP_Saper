@@ -227,7 +227,7 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 			continue;
 		}
 		if( is_edge_vertical(pos_x, j, board) || (j == board->n_col-1) ) {
-			if( pos_y == board->n_col-1 )
+			if( (pos_y == board->n_col-1) && (j == board->n_col-1) )
 				SET_COLOR_GREEN;
 			printf( "|" );
 		} else {
