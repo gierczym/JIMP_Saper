@@ -84,7 +84,21 @@ void print_belt( int n_col, int color_flag ) {
 	SET_COLOR_DEFAULT;
 }
 
-void print_belt_partial( int n_col, int pos_y, int color_flag ) {
+int is_edge_horizontal( int pos_x, int pos_y, board_t board ) {
+
+	if( pos_x == board->n_row-1 )
+		return 0;
+
+	if( (board->data[pos_x][pos_y] >= '1') && (board->data[pos_x][pos_y] <= '8')
+		       && ((ACTIVE == board->data[pos_x+1][pos_y]) || (FLAGGED == board->data[pos_x+1][pos_y])) )
+		return 1;
+	if( (board->data[pos_x+1][pos_y] >= '1') && (board->data[pos_x+1][pos_y] <= '8')
+		       && ((ACTIVE == board->data[pos_x][pos_y]) || (FLAGGED == board->data[pos_x][pos_y])) )
+		return 1;
+	return 0;
+}
+
+void print_belt_partial( int n_col, int pos_x, int pos_y, int color_flag, board_t board ) {
 
 	if( color_flag ) {
 		SET_COLOR_GREEN;
@@ -96,24 +110,31 @@ void print_belt_partial( int n_col, int pos_y, int color_flag ) {
 		SET_COLOR_GREEN;
 	}
 	printf( "|" );
+	SET_COLOR_DEFAULT;
 	
-	SET_COLOR_GREEN;
 	int i;
 	for( i = 0; i < n_col-1; i++ ) {
-		if( !color_flag ) {
-			printf( "   " );
+		if( (i == pos_y) && color_flag  ) {
+			SET_COLOR_GREEN;
+			printf( "-- " );
+			SET_COLOR_DEFAULT;
 			continue;
 		}
-		if( i == pos_y ) {
+		if( is_edge_horizontal( pos_x, i, board) ) {
 			printf( "-- " );
 		} else {
 			printf( "   " );
 		}
+		
 	}
-	SET_COLOR_DEFAULT;
 
 	if( (pos_y == n_col-1) && color_flag ) {
 		SET_COLOR_GREEN;
+		printf( "--|\n" );
+		SET_COLOR_DEFAULT;
+		return;
+	}
+	if( is_edge_horizontal( pos_x, i, board) ) {
 		printf( "--" );
 	} else {
 		printf( "  " );
@@ -121,8 +142,8 @@ void print_belt_partial( int n_col, int pos_y, int color_flag ) {
 	if( pos_y == n_col-1 )
 		SET_COLOR_GREEN;
 	printf( "|\n" );
-
 	SET_COLOR_DEFAULT;
+
 }
 
 
@@ -162,6 +183,21 @@ void print_character( fld_t fld ) {
 	printf( " %c", fld );
 	SET_COLOR_DEFAULT;
 }
+
+int is_edge_vertical( int pos_x, int pos_y, board_t board ) {
+
+	if( pos_y == board->n_col-1 )
+		return 0;
+
+	if( (board->data[pos_x][pos_y] >= '1') && (board->data[pos_x][pos_y] <= '8')
+		       && ((ACTIVE == board->data[pos_x][pos_y+1]) || (FLAGGED == board->data[pos_x][pos_y+1])) )
+		return 1;
+	if( (board->data[pos_x][pos_y+1] >= '1') && (board->data[pos_x][pos_y+1] <= '8')
+		       && ((ACTIVE == board->data[pos_x][pos_y]) || (FLAGGED == board->data[pos_x][pos_y])) )
+		return 1;
+	return 0;
+}
+
 void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	
 	if( color_flag )
@@ -179,23 +215,24 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	for( j = 0; j < board->n_col; j++ ) {
 		if( (j == pos_y) && color_flag ) {
 			SET_COLOR_GREEN;
-			printf(" %c", board->data[pos_x][j] );
-		} else {
-			print_character( board->data[pos_x][j] );
+			printf(" %c|", board->data[pos_x][j] );
+			SET_COLOR_DEFAULT;
+			continue;
 		}
-		if( ((j == pos_y-1) || (j == pos_y)) && color_flag ) {
+		print_character( board->data[pos_x][j] );
+		if( ((j == pos_y-1) && color_flag) ) {
 			SET_COLOR_GREEN;
 			printf( "|" );
-		} else {
-			if( j == board->n_col-1) {
-				if( pos_y == board->n_col-1 )
-					SET_COLOR_GREEN;
-				printf( "|" );
-			} else {
-				printf( " " );
-			}
+			SET_COLOR_DEFAULT;
+			continue;
 		}
-		SET_COLOR_DEFAULT;
+		if( is_edge_vertical(pos_x, j, board) || (j == board->n_col-1) ) {
+			if( pos_y == board->n_col-1 )
+				SET_COLOR_GREEN;
+			printf( "|" );
+		} else {
+			printf( " " );
+		}
 	}
 	
 	printf( "\n" );	
@@ -258,9 +295,9 @@ void display_board( int pos_x, int pos_y, board_t board ) {
 				break;
 			}
 		if( (i == pos_x-1) || (i == pos_x) ) { 
-			print_belt_partial( board->n_col, pos_y, 1 );
+			print_belt_partial( board->n_col, i, pos_y, 1, board );
 		} else {
-			print_belt_partial( board->n_col, pos_y, 0 );
+			print_belt_partial( board->n_col, i, pos_y, 0, board );
 		}
 	}
 
