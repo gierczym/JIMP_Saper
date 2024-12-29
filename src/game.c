@@ -11,6 +11,7 @@ typedef struct game {
 	int n_mines;
 	int init_flag;
 	int cheat_flag;
+	int revealed_fields;
 	int pos_x;
 	int pos_y;
 	int board_size_x;
@@ -109,6 +110,7 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	game->n_mines = n_mines;
 	game->init_flag = 0;
 	game->cheat_flag = 0;
+	game->revealed_fields = 0;
 	game->pos_x = board_size_x /2;
 	game->pos_y = board_size_y /2;
 	game->board_size_x = board_size_x;
@@ -143,6 +145,7 @@ void reveal_indicators( int pos_x, int pos_y, game_t game ) {
 		return;
 	
 	game->board_view->data[pos_x][pos_y] = game->board_core->data[pos_x][pos_y];
+	game->revealed_fields++;
 	if( game->board_view->data[pos_x][pos_y] != EMPTY )
 		return;
 	reveal_indicators( pos_x-1, pos_y-1, game );
@@ -164,6 +167,7 @@ void reveal_mines( game_t game ) {
 			if( MINE == game->board_core->data[i][j] )
 				game->board_view->data[i][j] = MINE;
 }
+
 
 int execute_command( game_t game, enum command_t command ) {
 	if( LEFT == command )
@@ -204,6 +208,9 @@ int execute_command( game_t game, enum command_t command ) {
 				return -1;
 			}
 			reveal_indicators( game->pos_x, game->pos_y, game );
+			if( game->revealed_fields == 
+			    game->board_size_x * game->board_size_y - game->n_mines )
+				return 1;
 	}
 
 	return 0;

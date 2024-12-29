@@ -7,6 +7,7 @@ typedef struct game {
 	int n_mines;
 	int init_flag;
 	int cheat_flag;
+	int revealed_fields;
 	int pos_x;
 	int pos_y;
 	int board_size_x;
