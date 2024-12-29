@@ -4,6 +4,15 @@
 #include "board.h"
 
 #define SET_COLOR_GREEN	  printf( "\033[0;32m")
+#define SET_COLOR_BRIGHTGREEN	  printf( "\033[0;92m")
+#define SET_COLOR_RED	  printf( "\033[0;31m")
+#define SET_COLOR_BRIGHTRED	  printf( "\033[0;91m")
+#define SET_COLOR_BLUE	  printf( "\033[0;34m")
+#define SET_COLOR_BRIGHTBLUE	  printf( "\033[0;94m")
+#define SET_COLOR_MAGENTA	  printf( "\033[0;35m")
+#define SET_COLOR_CYAN	  printf( "\033[0;36m")
+#define SET_COLOR_YELLOW	  printf( "\033[0;33m")
+#define SET_COLOR_GREY	  printf( "\033[0;90m")
 #define SET_COLOR_DEFAULT printf( "\033[0m")
 
 /*
@@ -26,7 +35,7 @@ typedef enum fld_disp {
 	FLAGGED = 'F',
 	EMPTY = 'X',
 	MINE = 'o'
-} fld_disp_t;
+} fld_t;
 */
 
 board_t create_board( int n_row, int n_col ) {
@@ -116,6 +125,43 @@ void print_belt_partial( int n_col, int pos_y, int color_flag ) {
 	SET_COLOR_DEFAULT;
 }
 
+
+void print_character( fld_t fld ) {
+	switch (fld) {
+		case EMPTY:
+			SET_COLOR_GREY;
+			break;
+		case ONE:
+			SET_COLOR_BLUE;
+			break;
+		case TWO:
+			SET_COLOR_BRIGHTGREEN;
+			break;
+		case THREE:
+			SET_COLOR_RED;
+			break;
+		case FOUR:
+			SET_COLOR_BRIGHTBLUE;
+			break;
+		case FIVE:
+			SET_COLOR_CYAN;
+			break;
+		case SIX:
+			SET_COLOR_MAGENTA;
+			break;
+		case SEVEN:
+			SET_COLOR_YELLOW;
+			break;
+		case EIGHT:
+			SET_COLOR_DEFAULT;
+			break;
+		case FLAGGED:
+			SET_COLOR_RED;
+			break;
+	}
+	printf( " %c", fld );
+	SET_COLOR_DEFAULT;
+}
 void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	
 	if( color_flag )
@@ -131,9 +177,12 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 
 	int j;
 	for( j = 0; j < board->n_col; j++ ) {
-		if( (j == pos_y) && color_flag )
+		if( (j == pos_y) && color_flag ) {
 			SET_COLOR_GREEN;
-		printf(" %c", board->data[pos_x][j] );
+			printf(" %c", board->data[pos_x][j] );
+		} else {
+			print_character( board->data[pos_x][j] );
+		}
 		if( ((j == pos_y-1) || (j == pos_y)) && color_flag ) {
 			SET_COLOR_GREEN;
 			printf( "|" );
