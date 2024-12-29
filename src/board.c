@@ -3,8 +3,8 @@
 
 #include "board.h"
 
-#define SET_COLOR_GREEN	  printf( "\033[0;32m");
-#define SET_COLOR_DEFAULT printf( "\033[0m");
+#define SET_COLOR_GREEN	  printf( "\033[0;32m")
+#define SET_COLOR_DEFAULT printf( "\033[0m")
 
 /*
 typedef struct brd {
@@ -60,11 +60,11 @@ board_t create_board( int n_row, int n_col ) {
 }
 
 void print_belt( int n_col, int color_flag ) {
-
-	printf( "   " ); // 3 empty characters
 	
 	if( color_flag )
 		SET_COLOR_GREEN;
+
+	printf( "---" );
 
 	int i;
 	for( i = 0; i < n_col; i++ ) {
@@ -75,21 +75,43 @@ void print_belt( int n_col, int color_flag ) {
 	SET_COLOR_DEFAULT;
 }
 
-void print_belt_partial( int n_col, int pos_y ) {
+void print_belt_partial( int n_col, int pos_y, int color_flag ) {
 
-	printf( "   " ); // 3 empty characters
+	if( color_flag ) {
+		SET_COLOR_GREEN;
+	}
+	printf( "--" );
+	SET_COLOR_DEFAULT;
+	
+	if( (0 == pos_y) || color_flag ) {
+		SET_COLOR_GREEN;
+	}
+	printf( "|" );
 	
 	SET_COLOR_GREEN;
-
 	int i;
-	for( i = 0; i < n_col; i++ ) {
+	for( i = 0; i < n_col-1; i++ ) {
+		if( !color_flag ) {
+			printf( "   " );
+			continue;
+		}
 		if( i == pos_y ) {
 			printf( "-- " );
 		} else {
 			printf( "   " );
 		}
 	}
-	printf( "\n" );
+	SET_COLOR_DEFAULT;
+
+	if( (pos_y == n_col-1) && color_flag ) {
+		SET_COLOR_GREEN;
+		printf( "--" );
+	} else {
+		printf( "  " );
+	}
+	if( pos_y == n_col-1 )
+		SET_COLOR_GREEN;
+	printf( "|\n" );
 
 	SET_COLOR_DEFAULT;
 }
@@ -99,32 +121,37 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	if( color_flag )
 		SET_COLOR_GREEN;
 	printf( "%2d", pos_x+1 );
-	SET_COLOR_DEFAULT
-	if( 0 == pos_y ) {
-		SET_COLOR_GREEN
-		printf( "|" );
-		SET_COLOR_DEFAULT
-	} else {
-		printf( "|" );
+	SET_COLOR_DEFAULT;
+	if( (0 == pos_y) || color_flag ) {
+		SET_COLOR_GREEN;
 	}
+	printf( "|" );
+	SET_COLOR_DEFAULT;
+	
 
 	int j;
 	for( j = 0; j < board->n_col; j++ ) {
 		if( (j == pos_y) && color_flag )
-			SET_COLOR_GREEN
+			SET_COLOR_GREEN;
 		printf(" %c", board->data[pos_x][j] );
 		if( ((j == pos_y-1) || (j == pos_y)) && color_flag ) {
 			SET_COLOR_GREEN;
 			printf( "|" );
 		} else {
-			printf( " " );
+			if( j == board->n_col-1) {
+				if( pos_y == board->n_col-1 )
+					SET_COLOR_GREEN;
+				printf( "|" );
+			} else {
+				printf( " " );
+			}
 		}
-		SET_COLOR_DEFAULT
+		SET_COLOR_DEFAULT;
 	}
-
+	
 	printf( "\n" );	
 
-	SET_COLOR_DEFAULT
+	SET_COLOR_DEFAULT;
 }
 
 void display_board( int pos_x, int pos_y, board_t board ) {
@@ -136,21 +163,21 @@ void display_board( int pos_x, int pos_y, board_t board ) {
 	//
 	// print upper line of coordinates
 	if( 0 == pos_y )
-		SET_COLOR_GREEN
+		SET_COLOR_GREEN;
 	printf( "  |" );
-	SET_COLOR_DEFAULT
+	SET_COLOR_DEFAULT;
 	for( i = 0; i < board->n_col; i++ ) {
 		if( i == pos_y-1 ) {
 			printf( "%2d", i+1 );
-			SET_COLOR_GREEN
+			SET_COLOR_GREEN;
 			printf( "|" );
-			SET_COLOR_DEFAULT
+			SET_COLOR_DEFAULT;
 			continue;
 		}
 		if( i == pos_y ) {
-			SET_COLOR_GREEN
+			SET_COLOR_GREEN;
 			printf( "%2d|", i+1 );
-			SET_COLOR_DEFAULT
+			SET_COLOR_DEFAULT;
 			continue;
 		}
 		printf( "%2d|", i+1 );
@@ -173,12 +200,20 @@ void display_board( int pos_x, int pos_y, board_t board ) {
 		} else {
 			print_row( i, pos_y, board, 0 );
 		}
+		if( i == board->n_row-1 )
+			if( i == pos_x) {
+				print_belt( board->n_col, 1 );
+				break;
+			} else {
+				print_belt( board->n_col, 0 );
+				break;
+			}
 		if( (i == pos_x-1) || (i == pos_x) ) { 
-			print_belt_partial( board->n_col, pos_y );
+			print_belt_partial( board->n_col, pos_y, 1 );
 		} else {
-			printf( "\n" );
+			print_belt_partial( board->n_col, pos_y, 0 );
 		}
-	} 
+	}
 
 }
 
