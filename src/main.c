@@ -53,7 +53,6 @@ int main( int argc, char *argv[]) {
 				printf("podano błędą wartość\npodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
 				difficulty = '\0';
 				clear_buff();
-
 		}
 	}
 	game_t game = initialize_game( board_size_x, board_size_y, n_mines );
