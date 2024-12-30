@@ -5,16 +5,19 @@
 #include "board.h"
 #include "game.h"
 
+void clear_buff(){
+	while (getchar() != '\n');
+}
 
 int main( int argc, char *argv[]) {
 
-	int board_size_x;
-	int board_size_y;
-	int n_mines;
+	int board_size_x = 0;
+	int board_size_y = 0;
+	int n_mines = 0;
 	int res;
 	enum command_t command; 
 	
-	printf("Witaj w grze saper!\npodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
+	printf("Witaj w grze saper!\nPodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
 	char difficulty = '\0';
 	while(difficulty == '\0'){
 		scanf("%c", &difficulty);
@@ -35,12 +38,21 @@ int main( int argc, char *argv[]) {
 				n_mines = 99;
 				break;
 			case 'c':
-				//do zrobienia
-				return 0;
+				printf("Wybrano własną planszę\nPamiętaj, że jej minimalny rozmiar do 4x4, a ilość min musi być większa od zera i mniejsza o co najmniej 9 od ilości pól\n");
+				while(printf("podaj liczbę wierszy ") > 0 && (scanf("%d", &board_size_x) <= 0 || board_size_x < 4)){
+					clear_buff();
+				}
+				while(printf("podaj liczbę kolumn ") > 0 && (scanf("%d", &board_size_y) <= 0 || board_size_y < 4)){
+					clear_buff();
+				}
+				while(printf("podaj liczbę min ") > 0 && (scanf("%d", &n_mines) <= 0 || n_mines < 1 || board_size_x * board_size_y - 9 < n_mines)){
+					clear_buff();
+				}
+				break;
 			default:
 				printf("podano błędą wartość\npodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
 				difficulty = '\0';
-				while (getchar() != '\n');
+				clear_buff();
 
 		}
 	}
