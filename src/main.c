@@ -38,19 +38,19 @@ int main( int argc, char *argv[]) {
 				n_mines = 99;
 				break;
 			case 'c':
-				printf("Wybrano własną planszę\nPamiętaj, że jej minimalny rozmiar do 4x4, a ilość min musi być większa od zera i mniejsza o co najmniej 9 od ilości pól\n");
-				while(printf("podaj liczbę wierszy ") > 0 && (scanf("%d", &board_size_x) <= 0 || board_size_x < 4)){
+				printf("Wybrano własną planszę\nPamiętaj, że jej minimalny rozmiar to 4x4, a ilość min musi być większa od zera i mniejsza o co najmniej 9 od ilości pól\n");
+				while(printf("Podaj liczbę wierszy ") > 0 && (scanf("%d", &board_size_x) <= 0 || board_size_x < 4)){
 					clear_buff();
 				}
-				while(printf("podaj liczbę kolumn ") > 0 && (scanf("%d", &board_size_y) <= 0 || board_size_y < 4)){
+				while(printf("Podaj liczbę kolumn ") > 0 && (scanf("%d", &board_size_y) <= 0 || board_size_y < 4)){
 					clear_buff();
 				}
-				while(printf("podaj liczbę min ") > 0 && (scanf("%d", &n_mines) <= 0 || n_mines < 1 || board_size_x * board_size_y - 9 < n_mines)){
+				while(printf("Podaj liczbę min ") > 0 && (scanf("%d", &n_mines) <= 0 || n_mines < 1 || board_size_x * board_size_y - 9 < n_mines)){
 					clear_buff();
 				}
 				break;
 			default:
-				printf("podano błędą wartość\npodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
+				printf("Podano błędą wartość\nPodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
 				difficulty = '\0';
 				clear_buff();
 		}
