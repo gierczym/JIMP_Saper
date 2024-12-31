@@ -240,7 +240,7 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	SET_COLOR_DEFAULT;
 }
 
-void display_board( int pos_x, int pos_y, board_t board ) {
+void display_board( int pos_x, int pos_y, board_t board, int mines_left) {
 	system( "clear" );
 	int i;
 	
@@ -300,7 +300,16 @@ void display_board( int pos_x, int pos_y, board_t board ) {
 			print_belt_partial( board->n_col, i, pos_y, 0, board );
 		}
 	}
-
+	//
+	//print mines remaining
+	if(mines_left >= 5 || mines_left == 0)
+		printf("pozostało %d min\n", mines_left);
+	else if(mines_left >= 2)
+		printf("pozostały %d miny\n", mines_left);
+	else if(mines_left == 1)
+		printf("pozostała 1 mina\n");
+	else
+		printf("postawiono więcej flag, niż jest min!\n");
 }
 
 

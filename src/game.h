@@ -12,6 +12,7 @@ typedef struct game {
 	int pos_y;
 	int board_size_x;
 	int board_size_y;
+	int flag_ctr;
 	board_t board_core;
 	board_t board_view;
 } * game_t;

@@ -60,17 +60,17 @@ int main( int argc, char *argv[]) {
 		if( 0 == strcmp( argv[1], "--cheat") )
 			game->cheat_flag = 1;
 
-	display_board( game->pos_x, game->pos_y, game->board_core );
+	display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
 	while( ESC != (command = read_command()) ) {
 		res = execute_command( game, command ); 
 		if( 0 == res ) {
-			display_board( game->pos_x, game->pos_y, game->board_view );
+			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
 		} else if( 1 == res ) {
-			display_board( game->pos_x, game->pos_y, game->board_view );
+			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
 			printf( "WYGRANA!!!\n" );
 			break;
 		} else {
-			display_board( game->pos_x, game->pos_y, game->board_core );
+			display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
 			printf( "PRZEGRANA!!!\n" );
 			break;
 		}

@@ -115,6 +115,7 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	game->pos_y = board_size_y /2;
 	game->board_size_x = board_size_x;
 	game->board_size_y = board_size_y;
+	game -> flag_ctr = 0;
 	game->board_core = create_board( board_size_x, board_size_y );
 	if( NULL == game->board_core ) {
 		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc tablicy board_core\n" );
@@ -190,8 +191,10 @@ int execute_command( game_t game, enum command_t command ) {
 	if( Q == command )
 		if( FLAGGED == game->board_view->data[game->pos_x][game->pos_y] ) {
 			game->board_view->data[game->pos_x][game->pos_y] = ACTIVE;
+			game -> flag_ctr--;
 		} else if ( ACTIVE == game->board_view->data[game->pos_x][game->pos_y] ) {
 			game->board_view->data[game->pos_x][game->pos_y] = FLAGGED;
+			game -> flag_ctr++;
 		}
 
 	if( E == command ) {
