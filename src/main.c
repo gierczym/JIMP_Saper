@@ -66,7 +66,7 @@ int main( int argc, char *argv[]) {
 		if( 0 == res ) {
 			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
 		} else if( 1 == res ) {
-			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
+			display_board( game->pos_x, game->pos_y, game->board_view, 0);
 			printf( "WYGRANA!!!\n" );
 			break;
 		} else {
