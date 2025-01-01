@@ -245,9 +245,7 @@ void display_help(){
 	printf("\u2190\u2193\u2192 | ASD - sterowanie kursorem\n");
 	printf("Q - oflaguj pole jako zwierające minę\n");
 	printf("E - odkryj pole\n");
-	printf("ESC - wejdź z gry\n");
-	
-	
+	printf("ESC - wyjdź z gry\n");
 }
 
 
