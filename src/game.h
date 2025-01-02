@@ -1,7 +1,7 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-
+#include "moveshistory.h"
 
 typedef struct game {
 	int n_mines;
@@ -13,6 +13,7 @@ typedef struct game {
 	int board_size_x;
 	int board_size_y;
 	int flag_ctr;
+	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;
 } * game_t;

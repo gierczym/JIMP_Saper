@@ -6,6 +6,7 @@
 #include "userinput.h"
 #include "board.h"
 #include "game.h"
+#include "moveshistory.h"
 
 void clear_buff(){
 	while (getchar() != '\n');
@@ -132,6 +133,14 @@ int main( int argc, char *argv[]) {
 			printf( "PRZEGRANA!!!\n" );
 			break;
 		}
+	}
+
+	int i;
+	moves_history_t history = game->moves_history;
+	move_t move;
+	for( i = 0; i < history->n_curr; i++ ) {
+		move = history->moves[i];
+		printf( "%3d: (x-%2d;y-%2d) %c\n", i, move.x, move.y, (char)move.command );
 	}
 
 	if( save_flag ) {

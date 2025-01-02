@@ -7,8 +7,8 @@ enum command_t {
 	RIGHT,
 	UP,
 	DOWN,
-	Q,
-	E,
+	Q = 'Q',
+	E = 'E',
 	ENTER,
 	ESC,
 	MISC

@@ -16,6 +16,8 @@ typedef struct game {
 	int pos_y;
 	int board_size_x;
 	int board_size_y;
+	int flag_ctr;
+	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;
 } * game_t;
@@ -116,6 +118,11 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	game->board_size_x = board_size_x;
 	game->board_size_y = board_size_y;
 	game -> flag_ctr = 0;
+	game->moves_history = init_moves_history( 10 );
+	if( NULL == game->moves_history ) {
+		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc moves_history\n" );
+		return NULL;
+	}
 	game->board_core = create_board( board_size_x, board_size_y );
 	if( NULL == game->board_core ) {
 		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc tablicy board_core\n" );
@@ -188,6 +195,10 @@ int execute_command( game_t game, enum command_t command ) {
 	if( game->pos_y > game->board_size_y-1 )
 		game->pos_y = game->board_size_y-1;
 
+	if( (Q == command) || (E == command) )
+		add_to_moves_history( game->pos_x, game->pos_y, command,
+				game->moves_history );
+
 	if( Q == command )
 		if( FLAGGED == game->board_view->data[game->pos_x][game->pos_y] ) {
 			game->board_view->data[game->pos_x][game->pos_y] = ACTIVE;
@@ -218,3 +229,5 @@ int execute_command( game_t game, enum command_t command ) {
 
 	return 0;
 }
+
+
