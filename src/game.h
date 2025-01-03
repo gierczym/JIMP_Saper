@@ -25,4 +25,5 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines);
 
 int execute_command( game_t game, enum command_t command );
 
+void generate_indicators( game_t game );
 #endif

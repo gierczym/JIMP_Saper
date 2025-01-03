@@ -73,8 +73,8 @@ int main( int argc, char *argv[]) {
 
 	if( read_board_flag || automatic_play_flag ) {
 		system( "clear" );
-		printf( "Wybrano opcje -r lub -t, tutaj jest miejsce na kod do automatycznego czytania planszy\n" );
-		return 0;
+		game = restore_board(in);
+		printf("Pomyślnie załadowano grę, wciśnij dowolny przycisk aby rozpocząć");
 	} else {
 		printf("Witaj w grze saper!\nPodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
 		char difficulty = '\0';
@@ -118,8 +118,9 @@ int main( int argc, char *argv[]) {
 		game = initialize_game( board_size_x, board_size_y, n_mines );
 			if( cheat_flag )
 			game->cheat_flag = 1;
+		display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
 	}
-	display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
+	
 	while( ESC != (command = read_command()) ) {
 		res = execute_command( game, command ); 
 		if( 0 == res ) {
