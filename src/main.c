@@ -7,6 +7,7 @@
 #include "board.h"
 #include "game.h"
 #include "moveshistory.h"
+#include "saves.h"
 
 void clear_buff(){
 	while (getchar() != '\n');
@@ -118,7 +119,6 @@ int main( int argc, char *argv[]) {
 			if( cheat_flag )
 			game->cheat_flag = 1;
 	}
-
 	display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
 	while( ESC != (command = read_command()) ) {
 		res = execute_command( game, command ); 
@@ -144,7 +144,8 @@ int main( int argc, char *argv[]) {
 	}
 
 	if( save_flag ) {
-		printf( "\nWybrano opcje zapisu planszy i historii ruchow do pliku, tutaj jest miejsce na kod do obslugi tej opcji\n" );
+		save_board(game, out);
+		save_moves(history, out);
 	}
 
 	if( in != NULL )

@@ -2,6 +2,7 @@
 #define _GAME_H_
 
 #include "moveshistory.h"
+#include "board.h"
 
 typedef struct game {
 	int n_mines;
