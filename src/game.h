@@ -29,4 +29,6 @@ int execute_command( game_t game, enum command_t command, int test_flag);
 
 void generate_indicators( game_t game );
 
+void free_game(game_t game);
+
 #endif

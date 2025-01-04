@@ -250,4 +250,13 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 	return 0;
 }
 
+void free_game(game_t game){
+	free(game->board_core->data);
+	free(game->board_view->data);
+	free(game->board_core);
+	free(game->board_view);
+	free(game->moves_history->moves);
+	free(game->moves_history);
+	free(game);
+}
 

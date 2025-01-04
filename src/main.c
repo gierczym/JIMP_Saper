@@ -166,6 +166,6 @@ int main( int argc, char *argv[]) {
 		fclose(in);
 	if( out != NULL )
 		fclose(out);
-
+	free_game(game);
 	return 0;
 }
