@@ -74,7 +74,8 @@ int main( int argc, char *argv[]) {
 	if(read_board_flag) {
 		system( "clear" );
 		game = restore_board(in);
-		if(NULL == game){
+		if(game->read_error == 1){
+			free_game_without_move_hst(game);
 			return EXIT_FAILURE;
 		}
 		printf("Pomyślnie załadowano grę, wciśnij dowolny przycisk aby rozpocząć");
@@ -82,7 +83,8 @@ int main( int argc, char *argv[]) {
 	else if (automatic_play_flag){
 		char *res_str[] = {"przegrana", "brak rozstrzygnięcia", "wygrana", "niepowodzeniem", "powodzeniem"};
 		game = restore_board_autoplay(in);
-		if(NULL == game){
+		if(game->read_error == 1){
+			free_game_without_move_hst(game);
 			return EXIT_FAILURE;
 		}
 		printf("Oczekiwany wynik gry: %s, Otrzymany wynik gry: %s, test zakończony %s\n",res_str[game->expected_res + 1], res_str[game->actual_res + 1], res_str[(game -> actual_res == game -> expected_res) + 3]);

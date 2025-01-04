@@ -16,6 +16,7 @@ typedef struct game {
 	int flag_ctr;
 	int expected_res;
 	int actual_res;
+	int read_error;
 	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;
@@ -31,4 +32,5 @@ void generate_indicators( game_t game );
 
 void free_game(game_t game);
 
+void free_game_without_move_hst(game_t game);
 #endif

@@ -5,6 +5,7 @@
 #include "userinput.h"
 #include "board.h"
 #include "game.h"
+#include "moveshistory.h"
 
 /*
 typedef struct game {
@@ -251,12 +252,15 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 }
 
 void free_game(game_t game){
+	free_moves_history(game->moves_history);
+	free_game_without_move_hst(game);
+
+}
+void free_game_without_move_hst(game_t game){
 	free(game->board_core->data);
 	free(game->board_view->data);
 	free(game->board_core);
 	free(game->board_view);
-	free(game->moves_history->moves);
-	free(game->moves_history);
 	free(game);
 }
 

@@ -61,7 +61,9 @@ game_t restore_board(FILE *in){
 	game->revealed_fields = 0;
 	game -> flag_ctr = 0;
 	game->moves_history = init_moves_history( 10 );
+	game -> read_error = 0;
     if(fscanf(in, "%d, %d, %d, %d\n", &game->board_size_x, &game->board_size_y, &game -> n_mines, &game -> expected_res) < 4){
+		free(game);
 		printf("[!] saves.c/restore_board: błąd wczytywania pierwszej linii pliku, otrzymano mniej niż 4 wartości\n");
 		return NULL;
 	}
@@ -73,10 +75,14 @@ game_t restore_board(FILE *in){
     game->board_core = create_board( game -> board_size_x, game -> board_size_y );
 	if( NULL == game->board_core ) {
 		fprintf( stderr, "[!] saves.c/restore_board: nie udalo sie utworzyc tablicy board_core\n" );
+		free(game);
 		return NULL;
 	}
 	game->board_view = create_board( game -> board_size_x, game -> board_size_y );
 	if( NULL == game->board_view ) {
+		free(game->board_core->data);
+		free(game->board_core);
+		free(game);
 		fprintf( stderr, "[!] saves.c/restore_board: nie udalo sie utworzyc tablicy board_view\n" );
 		return NULL;
 	}
@@ -84,7 +90,8 @@ game_t restore_board(FILE *in){
         int x, y;
         if(fscanf(in, "%d %d, ", &x, &y) < 2){
 			printf("[!] saves.c/restore_board: błąd wczytywania drugiej linii pliku, otrzymano mniej niż 2 koordynaty położenia bomby\n");
-			return NULL;
+			game -> read_error = 1;
+			return game;
 		}
         game -> board_core -> data[x][y] = MINE;
     }
@@ -94,15 +101,16 @@ game_t restore_board(FILE *in){
 
 game_t restore_board_autoplay(FILE *in){
 	game_t game = restore_board(in);
-	if(NULL == game)
-		return NULL;
+	if(game->read_error == 1)
+		return game;
 	int x, y;
 	char command;	
 	int scan_res;
 	while(scan_res = fscanf(in, "%d %d %c,", &x, &y, &command)){
 		if(scan_res < 3 && scan_res > 0){
 			printf("[!] saves.c/restore_board: błąd wczytywania trzeciej linii pliku, otrzymano mniej niż 3 parametry ruchu");
-			return NULL;
+			game->read_error = 1;
+			return game;
 		}
 		else if(scan_res <= 0)
 			break;
