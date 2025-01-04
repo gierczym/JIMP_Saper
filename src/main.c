@@ -74,11 +74,17 @@ int main( int argc, char *argv[]) {
 	if(read_board_flag) {
 		system( "clear" );
 		game = restore_board(in);
+		if(NULL == game){
+			return EXIT_FAILURE;
+		}
 		printf("Pomyślnie załadowano grę, wciśnij dowolny przycisk aby rozpocząć");
 	}
 	else if (automatic_play_flag){
 		char *res_str[] = {"przegrana", "brak rozstrzygnięcia", "wygrana", "niepowodzeniem", "powodzeniem"};
 		game = restore_board_autoplay(in);
+		if(NULL == game){
+			return EXIT_FAILURE;
+		}
 		printf("Oczekiwany wynik gry: %s, Otrzymany wynik gry: %s, test zakończony %s\n",res_str[game->expected_res + 1], res_str[game->actual_res + 1], res_str[(game -> actual_res == game -> expected_res) + 3]);
 		return 0;
 	}
@@ -137,7 +143,7 @@ int main( int argc, char *argv[]) {
 			printf( "WYGRANA!!!\n" );
 			break;
 		} else {
-			display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
+			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
 			printf( "PRZEGRANA!!!\n" );
 			break;
 		}

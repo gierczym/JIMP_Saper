@@ -167,7 +167,6 @@ void reveal_indicators( int pos_x, int pos_y, game_t game ) {
 }
 
 void reveal_mines( game_t game ) {
-
 	int i;
 	int j;
 	for( i = 0; i < game->board_size_x; i++ )
@@ -176,6 +175,14 @@ void reveal_mines( game_t game ) {
 				game->board_view->data[i][j] = MINE;
 }
 
+void reveal_mines_keep_flags( game_t game ) {
+	int i;
+	int j;
+	for( i = 0; i < game->board_size_x; i++ )
+		for( j = 0; j < game->board_size_y; j++ )
+			if( MINE == game->board_core->data[i][j] && game->board_view->data[i][j] != FLAGGED)
+				game->board_view->data[i][j] = MINE;
+}
 
 int execute_command( game_t game, enum command_t command, int test_flag) {
 	if(test_flag == 0){
@@ -220,12 +227,15 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 		if( ACTIVE == game->board_view->data[game->pos_x][game->pos_y] )
 			if( MINE == game->board_core->data[game->pos_x][game->pos_y] ) {
 				game->board_view->data[game->pos_x][game->pos_y] = 'M';
+				reveal_mines_keep_flags(game);
 				return -1;
 			}
 			reveal_indicators( game->pos_x, game->pos_y, game );
 			if( game->revealed_fields == 
-			    game->board_size_x * game->board_size_y - game->n_mines )
+			    game->board_size_x * game->board_size_y - game->n_mines ){
+				reveal_mines_keep_flags(game);
 				return 1;
+			}
 	}
 
 	return 0;
