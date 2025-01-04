@@ -14,6 +14,7 @@
 #define SET_COLOR_YELLOW	  printf( "\033[0;33m")
 #define SET_COLOR_GREY	  printf( "\033[0;90m")
 #define SET_COLOR_DEFAULT printf( "\033[0m")
+#define SET_COLOR_BG_MAGENTA printf("\033[0;41m")
 
 /*
 typedef struct brd {
@@ -179,8 +180,16 @@ void print_character( fld_t fld ) {
 		case FLAGGED:
 			SET_COLOR_RED;
 			break;
+
+			
 	}
-	printf( " %c", fld );
+
+	if(fld == FALSE_FLAGGED){
+		SET_COLOR_BG_MAGENTA;
+		printf(" @");
+	}
+	else
+		printf( " %c", fld );
 	SET_COLOR_DEFAULT;
 }
 

@@ -184,6 +184,14 @@ void reveal_mines_keep_flags( game_t game ) {
 				game->board_view->data[i][j] = MINE;
 }
 
+void check_false_flags(game_t game){
+	for(int x = 0; x < game->board_size_x; x++ )
+		for(int y = 0; y < game->board_size_y; y++ )
+			if(MINE != game->board_core->data[x][y] && game->board_view->data[x][y] == FLAGGED)
+				game->board_view->data[x][y] = FALSE_FLAGGED;
+}
+
+
 int execute_command( game_t game, enum command_t command, int test_flag) {
 	if(test_flag == 0){
 		if( LEFT == command )
@@ -228,6 +236,7 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 			if( MINE == game->board_core->data[game->pos_x][game->pos_y] ) {
 				game->board_view->data[game->pos_x][game->pos_y] = 'M';
 				reveal_mines_keep_flags(game);
+				check_false_flags(game);
 				return -1;
 			}
 			reveal_indicators( game->pos_x, game->pos_y, game );

@@ -18,6 +18,7 @@ typedef enum fld {
 	SEVEN = '7',
 	EIGHT = '8',
 	FLAGGED = '@',
+	FALSE_FLAGGED = '!',
 	EMPTY = 'X',
 	MINE = 'o'
 } fld_t;
