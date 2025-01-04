@@ -71,11 +71,18 @@ int main( int argc, char *argv[]) {
 	enum command_t command; 
 	game_t game;
 
-	if( read_board_flag || automatic_play_flag ) {
+	if(read_board_flag) {
 		system( "clear" );
 		game = restore_board(in);
 		printf("Pomyślnie załadowano grę, wciśnij dowolny przycisk aby rozpocząć");
-	} else {
+	}
+	else if (automatic_play_flag){
+		char *res_str[] = {"przegrana", "brak rozstrzygnięcia", "wygrana", "niepowodzeniem", "powodzeniem"};
+		game = restore_board_autoplay(in);
+		printf("Oczekiwany wynik gry: %s, Otrzymany wynik gry: %s, test zakończony %s\n",res_str[game->expected_res + 1], res_str[game->actual_res + 1], res_str[(game -> actual_res == game -> expected_res) + 3]);
+		return 0;
+	}
+	else {
 		printf("Witaj w grze saper!\nPodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
 		char difficulty = '\0';
 		while(difficulty == '\0'){
@@ -122,7 +129,7 @@ int main( int argc, char *argv[]) {
 	}
 	
 	while( ESC != (command = read_command()) ) {
-		res = execute_command( game, command ); 
+		res = execute_command( game, command, 0); 
 		if( 0 == res ) {
 			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
 		} else if( 1 == res ) {
@@ -145,7 +152,7 @@ int main( int argc, char *argv[]) {
 	}
 
 	if( save_flag ) {
-		save_board(game, out);
+		save_board(game, out, res);
 		save_moves(history, out);
 	}
 

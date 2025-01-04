@@ -14,6 +14,8 @@ typedef struct game {
 	int board_size_x;
 	int board_size_y;
 	int flag_ctr;
+	int expected_res;
+	int actual_res;
 	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;
@@ -23,7 +25,8 @@ void generate_mines( game_t game );
 
 game_t initialize_game( int board_size_x, int board_size_y, int n_mines);
 
-int execute_command( game_t game, enum command_t command );
+int execute_command( game_t game, enum command_t command, int test_flag);
 
 void generate_indicators( game_t game );
+
 #endif

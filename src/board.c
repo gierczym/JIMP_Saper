@@ -240,12 +240,8 @@ void print_row( int pos_x, int pos_y, board_t board, int color_flag ) {
 	SET_COLOR_DEFAULT;
 }
 void display_help(){
-	printf("Sterowanie:\n");
-	printf("  \u2191  |  W\n");
-	printf("\u2190 \u2193\u2192 | ASD - sterowanie kursorem\n");
-	printf("Q - oflaguj pole jako zwierające minę\n");
-	printf("E - odkryj pole\n");
-	printf("ESC - wyjdź z gry\n");
+	printf("  \u2191  |  W                              Q - oflaguj pole jako zwierające minę     ESC - wyjdź z gry\n");
+	printf("\u2190 \u2193\u2192 | ASD - sterowanie kursorem       E - odkryj pole\n");
 }
 
 

@@ -177,28 +177,29 @@ void reveal_mines( game_t game ) {
 }
 
 
-int execute_command( game_t game, enum command_t command ) {
-	if( LEFT == command )
-		game->pos_y--;
-	if( RIGHT == command )
-		game->pos_y++;
-	if( UP == command )
-		game->pos_x--;
-	if( DOWN == command )
-		game->pos_x++;
-	if( game->pos_x < 0 )
-		game->pos_x = 0;
-	if( game->pos_x > game->board_size_x-1 )
-		game->pos_x = game->board_size_x-1;
-	if( game->pos_y < 0 )
-		game->pos_y = 0;
-	if( game->pos_y > game->board_size_y-1 )
-		game->pos_y = game->board_size_y-1;
+int execute_command( game_t game, enum command_t command, int test_flag) {
+	if(test_flag == 0){
+		if( LEFT == command )
+			game->pos_y--;
+		if( RIGHT == command )
+			game->pos_y++;
+		if( UP == command )
+			game->pos_x--;
+		if( DOWN == command )
+			game->pos_x++;
+		if( game->pos_x < 0 )
+			game->pos_x = 0;
+		if( game->pos_x > game->board_size_x-1 )
+			game->pos_x = game->board_size_x-1;
+		if( game->pos_y < 0 )
+			game->pos_y = 0;
+		if( game->pos_y > game->board_size_y-1 )
+			game->pos_y = game->board_size_y-1;
 
-	if( (Q == command) || (E == command) )
-		add_to_moves_history( game->pos_x, game->pos_y, command,
-				game->moves_history );
-
+		if( (Q == command) || (E == command) )
+			add_to_moves_history( game->pos_x, game->pos_y, command,
+					game->moves_history );
+	}
 	if( Q == command )
 		if( FLAGGED == game->board_view->data[game->pos_x][game->pos_y] ) {
 			game->board_view->data[game->pos_x][game->pos_y] = ACTIVE;
