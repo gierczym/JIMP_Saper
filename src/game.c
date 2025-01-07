@@ -120,6 +120,8 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	game->board_size_y = board_size_y;
 	game -> flag_ctr = 0;
 	game->moves_history = init_moves_history( 10 );
+	game -> actual_res = 0;
+	game -> points = 0;
 	if( NULL == game->moves_history ) {
 		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc moves_history\n" );
 		return NULL;
@@ -191,7 +193,26 @@ void check_false_flags(game_t game){
 			if(MINE != game->board_core->data[x][y] && game->board_view->data[x][y] == FLAGGED)
 				game->board_view->data[x][y] = FALSE_FLAGGED;
 }
-
+void calculate_points(game_t game, char difficulty){
+	int mltp = 0;
+	switch(difficulty){
+		case 'e':
+			mltp = 1;
+			break;
+		case 'm':
+			mltp = 2;
+			break;
+		case 'h':
+			mltp = 3;
+			break;
+		case 'c':
+			mltp = 0;
+			break;
+		default:
+			printf("[!] game.c/calculate_points: błąd otczytu poziomu trudności");
+	}
+	game -> points = mltp * game->revealed_fields;
+}
 
 int execute_command( game_t game, enum command_t command, int test_flag) {
 	if(test_flag == 0){
@@ -238,12 +259,14 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 				game->board_view->data[game->pos_x][game->pos_y] = 'M';
 				reveal_mines_keep_flags(game);
 				check_false_flags(game);
+				game->actual_res = -1;
 				return -1;
 			}
 			reveal_indicators( game->pos_x, game->pos_y, game );
 			if( game->revealed_fields == 
 			    game->board_size_x * game->board_size_y - game->n_mines ){
 				reveal_mines_keep_flags(game);
+				game->actual_res = 1;
 				return 1;
 			}
 	}

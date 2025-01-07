@@ -17,6 +17,8 @@ typedef struct game {
 	int expected_res;
 	int actual_res;
 	int read_error;
+	char nickname[21];
+	int points;
 	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;
@@ -33,4 +35,6 @@ void generate_indicators( game_t game );
 void free_game(game_t game);
 
 void free_game_without_move_hst(game_t game);
+
+void calculate_points(game_t game, char difficulty);
 #endif

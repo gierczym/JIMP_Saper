@@ -254,7 +254,7 @@ void display_help(){
 }
 
 
-void display_board( int pos_x, int pos_y, board_t board, int mines_left) {
+void display_board( int pos_x, int pos_y, board_t board, int mines_left, int points) {
 	system( "clear" );
 	int i;
 	
@@ -314,16 +314,17 @@ void display_board( int pos_x, int pos_y, board_t board, int mines_left) {
 			print_belt_partial( board->n_col, i, pos_y, 0, board );
 		}
 	}
+	
 	//
 	//print mines remaining
 	if(mines_left >= 5 || mines_left == 0)
-		printf("pozostało %d min\n", mines_left);
+		printf("pozostało %d min 	Twój aktualny wynik: %d\n", mines_left, points);
 	else if(mines_left >= 2)
-		printf("pozostały %d miny\n", mines_left);
+		printf("pozostały %d miny	Twój aktualny wynik: %d\n", mines_left, points);
 	else if(mines_left == 1)
-		printf("pozostała 1 mina\n");
+		printf("pozostała 1 mina 	Twój aktualny wynik: %d\n", points);
 	else
-		printf("postawiono więcej flag, niż jest min!\n");
+		printf("postawiono więcej flag, niż jest min!");
 	display_help();
 }
 

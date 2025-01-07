@@ -25,6 +25,6 @@ typedef enum fld {
 
 board_t create_board( int n_row, int n_col );
 
-void display_board( int pos_x, int pos_y, board_t board, int mines_left);
+void display_board( int pos_x, int pos_y, board_t board, int mines_left, int points;);
 
 #endif

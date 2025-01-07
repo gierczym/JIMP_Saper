@@ -22,7 +22,15 @@ int main( int argc, char *argv[]) {
 	int opt;
 	FILE *in = NULL;
 	FILE *out = NULL;
+	FILE *leaderboard = NULL;
 
+	if(NULL == (leaderboard = fopen("data/leaderboard.dat", "r"))){
+		printf("nie wykryto pliku 'data/leaderboard.dat' utworzono więc nowy\n");
+		fopen("data/leaderboard.dat", "w");
+	}
+	else
+		fclose(leaderboard);
+	
 	while( (opt = getopt(argc, argv, "ct:r:s:")) != -1 ) {
 		switch (opt) {
 			case 'c':
@@ -68,6 +76,7 @@ int main( int argc, char *argv[]) {
 	int board_size_y = 0;
 	int n_mines = 0;
 	int res;
+	char difficulty = '\0';
 	enum command_t command; 
 	game_t game;
 
@@ -91,8 +100,7 @@ int main( int argc, char *argv[]) {
 		return 0;
 	}
 	else {
-		printf("Witaj w grze saper!\nPodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny\n");
-		char difficulty = '\0';
+		printf("Witaj w grze saper!\nPodaj poziom trudności\ne - łatwy\nm - średni\nh - trudny\nc - własny (brak punktacji do rankingu)\n");
 		while(difficulty == '\0'){
 			scanf("%c", &difficulty);
 			switch (difficulty){
@@ -131,21 +139,21 @@ int main( int argc, char *argv[]) {
 		}
 
 		game = initialize_game( board_size_x, board_size_y, n_mines );
-			if( cheat_flag )
+		if( cheat_flag )
 			game->cheat_flag = 1;
-		display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr);
+		display_board( game->pos_x, game->pos_y, game->board_core, game -> n_mines - game -> flag_ctr, game -> points);
 	}
-	
 	while( ESC != (command = read_command()) ) {
 		res = execute_command( game, command, 0); 
+		calculate_points(game, difficulty);
 		if( 0 == res ) {
-			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
+			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr, game -> points);
 		} else if( 1 == res ) {
-			display_board( game->pos_x, game->pos_y, game->board_view, 0);
+			display_board( game->pos_x, game->pos_y, game->board_view, 0, game -> points);
 			printf( "WYGRANA!!!\n" );
 			break;
 		} else {
-			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr);
+			display_board( game->pos_x, game->pos_y, game->board_view, game -> n_mines - game -> flag_ctr, game -> points);
 			printf( "PRZEGRANA!!!\n" );
 			break;
 		}
@@ -163,7 +171,13 @@ int main( int argc, char *argv[]) {
 		save_board(game, out, res);
 		save_moves(history, out);
 	}
-
+	if(difficulty != 'c'){
+		printf("Twój wynik to %d punktów!, podaj swój pseudonim, aby umożliwić zapisanie Cię w rankingu graczy\n", game->points);
+		printf("Pseudonim nie może zawierać spacji i innych znaków białych oraz musi zawierać maksymalnie 20 znaków.\n");
+		printf("Podaj swój pesudonim: ");
+		scanf("%20s", game->nickname);
+		append_to_leaderboard(game);	
+	}
 	if( in != NULL )
 		fclose(in);
 	if( out != NULL )
