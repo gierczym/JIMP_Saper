@@ -188,20 +188,20 @@ void append_to_leaderboard(game_t game){
 	fclose(lb_save);
 	//
 	//print top 5 players
-	if(n > 5)
-		n = 5;
+	int tmp_print = n;
+	if(tmp_print > 5)
+		tmp_print = 5;
 	printf("            Aktualnie najlepszych pięciu graczy:\n");
 	printf("============================================================\n");
 	printf("|Miejsce:   |Pseudonim:                     |Liczba punktów|\n");
 	printf("============================================================\n");
-	for(int i = 0; i < n; i++){
+	for(int i = 0; i < tmp_print; i++){
 		printf("|%11d| %30s|%14d|\n", i+1, leaderboard[i] -> nickname, leaderboard[i] -> points);
 		printf("|----------------------------------------------------------|\n");
 	}
 	//
 	//free memory
 	for(int i = 0; i <= n; i++){
-		free(leaderboard[i]->nickname);
 		free(leaderboard[i]);
 	}
 	free(leaderboard);
