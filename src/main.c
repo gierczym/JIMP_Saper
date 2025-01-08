@@ -184,8 +184,6 @@ int main( int argc, char *argv[]) {
 		scanf("%20s", game->nickname);
 		append_to_leaderboard(game);	
 	}
-	if( in != NULL )
-		fclose(in);
 	if( out != NULL )
 		fclose(out);
 	free_game(game);
