@@ -24,9 +24,19 @@ int main( int argc, char *argv[]) {
 	FILE *out = NULL;
 	FILE *leaderboard = NULL;
 
+	system("clear");
+	
 	if(NULL == (leaderboard = fopen("data/leaderboard.dat", "r"))){
-		printf("nie wykryto pliku 'data/leaderboard.dat' utworzono więc nowy\n");
+		printf("Nie wykryto pliku 'data/leaderboard.dat', próba utworzonia nowego...\n");
 		fopen("data/leaderboard.dat", "w");
+		if(NULL == (leaderboard = fopen("data/leaderboard.dat", "r"))){
+			printf("Nie udało się utworzyć pliku data/leaderboard.dat, sprawdź, czy folder data istnieje\n");
+			return EXIT_FAILURE;
+		}
+		else{
+			fclose(leaderboard);
+			printf("Pomyślnie utworzono nowy plik rankingu data/leaderboard.dat\n");
+		}
 	}
 	else
 		fclose(leaderboard);
