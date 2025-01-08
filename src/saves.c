@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "game.h"
 #include "saves.h"
 #include "moveshistory.h"
 #include "game.h"
+
 /*
 typedef struct game {
 	int n_mines;
@@ -129,12 +131,12 @@ game_t restore_board_autoplay(FILE *in){
 	return game;
 }
 
-void append_to_leaderboard(game_t game){
+int append_to_leaderboard(game_t game){
 	int dyn_vect_size = 2;
 	leaderboard_entry_t **leaderboard = malloc(sizeof (leaderboard_entry_t) * (dyn_vect_size+1));
 	if(NULL == leaderboard){
 		printf("[!] saves.c/append_to_leaderboard: alokacja pamięci na tablicę wyników nie powiodła się");
-		return;
+		return -1;
 	}
 	FILE *lb = fopen("data/leaderboard.dat", "r");
 	int n = 0;
@@ -142,34 +144,33 @@ void append_to_leaderboard(game_t game){
 		if(n == dyn_vect_size){
 			if(NULL == (leaderboard = realloc(leaderboard, sizeof(leaderboard_entry_t)*dyn_vect_size*2))){
 				printf("[!] saves.c/append_to_leaderboard: realokacja pamięci na tablicę wyników nie powiodła się");
-				return;
+				return -2;
 			}
 			dyn_vect_size *= 2;
 		}
 		if(NULL == (leaderboard[n] = malloc(sizeof (leaderboard_entry_t)))){
 			printf("[!] saves.c/append_to_leaderboard: alokacja pamięci na wpis w tablicy wyników nie powiodła się");
-			return;
+			return -1;
 		}
 		if(NULL == (leaderboard[n] -> nickname = malloc(sizeof (char) * 21))){
 			printf("[!] saves.c/append_to_leaderboard: alokacja pamięci na pseudonim we wpisie w tablicy wyników nie powiodła się");
-			return;
+			return -1;
 		}
 		if(fscanf(lb, "%s %d\n", leaderboard[n] -> nickname, &leaderboard[n] -> points) != 2){
 			break;
 		}
 		n++;
-		
 	}
 	fclose(lb);	
 	int to_append = 1;
 	for(int i = 0; i < n; i++){
-		if(game->points >= leaderboard[i] -> points){
+		if(game->points > leaderboard[i] -> points){
 			int j;
 			for(j = n; j>i; j--){
-				leaderboard[j]->nickname = leaderboard[j-1]->nickname;
+				strcpy(leaderboard[j]->nickname, leaderboard[j-1]->nickname);
 				leaderboard[j]->points = leaderboard[j-1]->points;		
 			}
-			leaderboard[j]->nickname = game->nickname;
+			strcpy(leaderboard[j]->nickname, game->nickname);
 			leaderboard[j]->points = game->points;
 			to_append = 0;
 			n++;
@@ -177,7 +178,7 @@ void append_to_leaderboard(game_t game){
 		}
 	}
 	if(to_append == 1){
-		leaderboard[n] -> nickname = game -> nickname;
+		strcpy(leaderboard[n] -> nickname, game -> nickname);
 		leaderboard[n] -> points = game -> points;
 		n++;
 	}
@@ -191,17 +192,18 @@ void append_to_leaderboard(game_t game){
 	int tmp_print = n;
 	if(tmp_print > 5)
 		tmp_print = 5;
-	printf("            Aktualnie najlepszych pięciu graczy:\n");
-	printf("============================================================\n");
-	printf("|Miejsce:   |Pseudonim:                     |Liczba punktów|\n");
-	printf("============================================================\n");
+	printf("\n             Aktualnie najlepszych pięciu graczy:\n");
+	printf(" =============================================================\n");
+	printf(" |Miejsce:   |Pseudonim:                     |Liczba punktów:|\n");
+	printf(" =============================================================\n");
 	for(int i = 0; i < tmp_print; i++){
-		printf("|%11d| %30s|%14d|\n", i+1, leaderboard[i] -> nickname, leaderboard[i] -> points);
-		printf("|----------------------------------------------------------|\n");
+		printf(" |%11d| %30s|%15d|\n", i+1, leaderboard[i] -> nickname, leaderboard[i] -> points);
+		printf(" |-----------------------------------------------------------|\n");
 	}
 	//
 	//free memory
-	for(int i = 0; i <= n; i++){
+	for(int i = 0; i < n; i++){
+		free(leaderboard[i]->nickname);
 		free(leaderboard[i]);
 	}
 	free(leaderboard);

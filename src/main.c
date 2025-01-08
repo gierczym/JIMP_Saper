@@ -159,17 +159,9 @@ int main( int argc, char *argv[]) {
 		}
 	}
 
-	int i;
-	moves_history_t history = game->moves_history;
-	move_t move;
-	for( i = 0; i < history->n_curr; i++ ) {
-		move = history->moves[i];
-		printf( "%3d: (x-%2d;y-%2d) %c\n", i, move.x, move.y, (char)move.command );
-	}
-
 	if( save_flag ) {
 		save_board(game, out, res);
-		save_moves(history, out);
+		save_moves(game -> moves_history, out);
 	}
 	if(difficulty != 'c'){
 		printf("Twój wynik to %d punktów!, podaj swój pseudonim, aby umożliwić zapisanie Cię w rankingu graczy\n", game->points);

@@ -17,5 +17,5 @@ game_t restore_board(FILE *in);
 
 game_t restore_board_autoplay(FILE *in);
 
-void append_to_leaderboard(game_t game);
+int append_to_leaderboard(game_t game);
 #endif

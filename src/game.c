@@ -209,7 +209,7 @@ void calculate_points(game_t game, char difficulty){
 			mltp = 0;
 			break;
 		default:
-			printf("[!] game.c/calculate_points: błąd otczytu poziomu trudności");
+			printf("[!] game.c/calculate_points: błąd odczytu poziomu trudności");
 	}
 	game -> points = mltp * game->revealed_fields;
 }
