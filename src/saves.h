@@ -9,7 +9,7 @@ typedef struct leaderboard_entry{
     int points;
 } leaderboard_entry_t;
 
-int save_board(game_t game, FILE *out, int res);
+int save_board(game_t game, FILE *out, int res, char diff);
 
 int save_moves(moves_history_t history, FILE *out);
 

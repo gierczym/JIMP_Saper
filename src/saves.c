@@ -31,9 +31,8 @@ typedef struct brd {
 
 */
 
-int save_board(game_t game, FILE *out, int res){
-	
-    fprintf(out, "%d, %d, %d, %d\n" , game -> board_size_x, game -> board_size_y, game -> n_mines, res);
+int save_board(game_t game, FILE *out, int res, char diff){
+    fprintf(out, "%d, %d, %d, %d, %c\n" , game -> board_size_x, game -> board_size_y, game -> n_mines, res, diff);
     for(int x = 0; x < game -> board_size_x; x++){
         for(int y = 0; y < game -> board_size_y; y++){
             if(game -> board_core -> data[x][y] == MINE){
@@ -64,9 +63,10 @@ game_t restore_board(FILE *in){
 	game -> flag_ctr = 0;
 	game->moves_history = init_moves_history( 10 );
 	game -> read_error = 0;
-    if(fscanf(in, "%d, %d, %d, %d\n", &game->board_size_x, &game->board_size_y, &game -> n_mines, &game -> expected_res) < 4){
+	game->correct_moves = -1;
+    if(fscanf(in, "%d, %d, %d, %d, %c\n", &game->board_size_x, &game->board_size_y, &game -> n_mines, &game -> expected_res, &game -> difficulty) < 5){
 		free(game);
-		printf("[!] saves.c/restore_board: błąd wczytywania pierwszej linii pliku, otrzymano mniej niż 4 wartości\n");
+		printf("[!] saves.c/restore_board: błąd wczytywania pierwszej linii pliku, otrzymano mniej niż 5 wartości\n");
 		return NULL;
 	}
     game->pos_x = game -> board_size_x / 2;
@@ -103,8 +103,13 @@ game_t restore_board(FILE *in){
 
 game_t restore_board_autoplay(FILE *in){
 	game_t game = restore_board(in);
-	if(game->read_error == 1)
-		return game;
+	if(NULL == game){
+		return NULL;
+	}
+	else if(game->read_error == 1){
+		free_game_without_move_hst(game);
+		return NULL;
+	}
 	int x, y;
 	char command;	
 	int scan_res;
@@ -123,11 +128,11 @@ game_t restore_board_autoplay(FILE *in){
 				game -> actual_res = 1;
 				return game;
 			case -1:
-				game -> actual_res = -1;
+				game -> actual_res = 0;
 				return game;
 		}
 	}
-	game -> actual_res = 0;
+	game -> actual_res = 2;
 	return game;
 }
 

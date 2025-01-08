@@ -120,8 +120,9 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	game->board_size_y = board_size_y;
 	game -> flag_ctr = 0;
 	game->moves_history = init_moves_history( 10 );
-	game -> actual_res = 0;
+	game -> actual_res = 2;
 	game -> points = 0;
+	game ->correct_moves = -1;
 	if( NULL == game->moves_history ) {
 		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc moves_history\n" );
 		return NULL;
@@ -254,12 +255,12 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 			if( game->cheat_flag )
 				reveal_mines( game );
 		}
-		if( ACTIVE == game->board_view->data[game->pos_x][game->pos_y] )
+		if( ACTIVE == game->board_view->data[game->pos_x][game->pos_y] ){
 			if( MINE == game->board_core->data[game->pos_x][game->pos_y] ) {
 				game->board_view->data[game->pos_x][game->pos_y] = 'M';
 				reveal_mines_keep_flags(game);
 				check_false_flags(game);
-				game->actual_res = -1;
+				game->actual_res = 0;
 				return -1;
 			}
 			reveal_indicators( game->pos_x, game->pos_y, game );
@@ -267,10 +268,13 @@ int execute_command( game_t game, enum command_t command, int test_flag) {
 			    game->board_size_x * game->board_size_y - game->n_mines ){
 				reveal_mines_keep_flags(game);
 				game->actual_res = 1;
+				game->correct_moves++;
 				return 1;
-			}
+			
+			}	
+			game->correct_moves++;
+		}
 	}
-
 	return 0;
 }
 

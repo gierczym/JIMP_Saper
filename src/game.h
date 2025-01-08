@@ -19,6 +19,8 @@ typedef struct game {
 	int read_error;
 	char nickname[21];
 	int points;
+	char difficulty;
+	int correct_moves;
 	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;

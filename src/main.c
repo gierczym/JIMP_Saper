@@ -83,6 +83,7 @@ int main( int argc, char *argv[]) {
 	if(read_board_flag) {
 		system( "clear" );
 		game = restore_board(in);
+		difficulty = game -> difficulty;
 		if(game->read_error == 1){
 			free_game_without_move_hst(game);
 			return EXIT_FAILURE;
@@ -90,13 +91,16 @@ int main( int argc, char *argv[]) {
 		printf("Pomyślnie załadowano grę, wciśnij dowolny przycisk aby rozpocząć");
 	}
 	else if (automatic_play_flag){
-		char *res_str[] = {"przegrana", "brak rozstrzygnięcia", "wygrana", "niepowodzeniem", "powodzeniem"};
 		game = restore_board_autoplay(in);
+		if(NULL == game || game->read_error)
+			return EXIT_FAILURE;
+		difficulty = game -> difficulty;
 		if(game->read_error == 1){
 			free_game_without_move_hst(game);
 			return EXIT_FAILURE;
 		}
-		printf("Oczekiwany wynik gry: %s, Otrzymany wynik gry: %s, test zakończony %s\n",res_str[game->expected_res + 1], res_str[game->actual_res + 1], res_str[(game -> actual_res == game -> expected_res) + 3]);
+		calculate_points(game, game->difficulty);
+		printf("Poprawne kroki: %d, punkty: %d, wynik: %d\n", game->correct_moves, game->points, game->actual_res);
 		return 0;
 	}
 	else {
@@ -160,7 +164,7 @@ int main( int argc, char *argv[]) {
 	}
 
 	if( save_flag ) {
-		save_board(game, out, res);
+		save_board(game, out, res, difficulty);
 		save_moves(game -> moves_history, out);
 	}
 	if(difficulty != 'c'){
