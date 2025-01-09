@@ -14,4 +14,7 @@
 #define SET_COLOR_DEFAULT printf( "\033[0m")
 #define SET_COLOR_BG_MAGENTA printf("\033[0;41m")
 
+#define PRINT_PASS printf( "[" ); SET_COLOR_GREEN; printf( "PASSED" ); SET_COLOR_DEFAULT; printf( "]: " );
+#define PRINT_FAIL printf( "[" ); SET_COLOR_RED; printf( "FAILED" ); SET_COLOR_DEFAULT; printf( "]: " );
+
 #endif

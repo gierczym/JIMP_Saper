@@ -5,41 +5,22 @@
 
 #include "colors.h"
 
-/*
-typedef struct brd {
-	int n_row;
-	int n_col;
-	char **data;
-} * board_t;
-
-typedef enum fld_disp {
-	ACTIVE = ' ',
-	ONE = '1',
-	TWO = '2',
-	THREE = '3',
-	FOUR = '4',
-	FIVE = '5',
-	SIX = '6',
-	SEVEN = '7',
-	EIGHT = '8',
-	FLAGGED = 'F',
-	EMPTY = 'X',
-	MINE = 'o'
-} fld_t;
-*/
-
 board_t create_board( int n_row, int n_col ) {
 	
 	board_t board = malloc( sizeof * board );
 	if( NULL == board ) {
-		fprintf( stderr, "[!] board.c/create_board: nie udalo sie zaalokowac pamieci na typ board_t\n" );
+		#ifndef TEST
+			fprintf( stderr, "[!] board.c/create_board: nie udalo sie zaalokowac pamieci na typ board_t\n" );
+		#endif
 		return NULL;
 	}
 	board->n_row = n_row;
 	board->n_col = n_col;
 	board->data = malloc( n_row * sizeof * board->data );
 	if( NULL == board->data ) {
-		fprintf( stderr, "[!] board.c/create_board: nie udalo sie zaalokowac pamieci na board->data\n" );
+		#ifndef TEST
+			fprintf( stderr, "[!] board.c/create_board: nie udalo sie zaalokowac pamieci na board->data\n" );
+		#endif
 		return NULL;
 	}
 	int i;
@@ -47,7 +28,9 @@ board_t create_board( int n_row, int n_col ) {
 	for( i = 0; i < n_row; i++ ){
 		board->data[i] = malloc( n_col * sizeof(char) );
 		if( NULL == board->data[i] ) {
-			fprintf( stderr, "[!] board.c/create_board: nie udalo sie zaalokowac pamieci na %d-ty wiersz planszy\n", i+1 );
+			#ifndef TEST
+				fprintf( stderr, "[!] board.c/create_board: nie udalo sie zaalokowac pamieci na %d-ty wiersz planszy\n", i+1 );
+			#endif
 			return NULL;
 		}
 		for( j = 0; j < n_col; j++ ) {
@@ -317,6 +300,13 @@ void display_board( int pos_x, int pos_y, board_t board, int mines_left, int poi
 	display_help();
 }
 
+void free_board( board_t board ) {
+	int i;
+	for( i = 0; i < board->n_row; i++ )
+		free( board->data[i] );
+	free( board->data );
+	free( board );
+}
 
 
 

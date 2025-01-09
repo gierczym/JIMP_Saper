@@ -19,6 +19,13 @@ bin/moveshistory.o: src/moveshistory.c
 bin/saves.o: src/saves.c
 	cc -o bin/saves.o -c src/saves.c
 
+test: src/test_board.c src/board.c
+	@clear
+	@cc -o bin/test_board.o src/test_board.c src/board.c -DTEST
+	@./bin/test_board.o
+	@echo 
+
+
 clean:
 	ls bin/*.o | grep -v game.o | xargs rm
 
