@@ -19,9 +19,10 @@ bin/moveshistory.o: src/moveshistory.c
 bin/saves.o: src/saves.c
 	cc -o bin/saves.o -c src/saves.c
 
-test: src/test_board.c src/board.c
-	@clear
-	@cc -o bin/test_board.o src/test_board.c src/board.c -DTEST
+bin/test_board.o: src/test_board.c src/board.c
+	cc -o bin/test_board.o src/test_board.c src/board.c -DTEST
+
+test: bin/test_board.o bin/test_userinput.o
 	@./bin/test_board.o
 	@echo 
 
