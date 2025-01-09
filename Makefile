@@ -22,8 +22,13 @@ bin/saves.o: src/saves.c
 bin/test_board.o: src/test_board.c src/board.c
 	cc -o bin/test_board.o src/test_board.c src/board.c -DTEST
 
-test: bin/test_board.o bin/test_userinput.o
+bin/test_moveshistory.o: src/test_moveshistory.c src/moveshistory.c
+	cc -o bin/test_moveshistory.o src/test_moveshistory.c src/moveshistory.c
+
+test: bin/test_board.o bin/test_moveshistory.o
 	@./bin/test_board.o
+	@echo 
+	@./bin/test_moveshistory.o
 	@echo 
 
 
