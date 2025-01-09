@@ -41,12 +41,12 @@ int main( int argc, char *argv[]) {
 	else
 		fclose(leaderboard);
 	
-	while( (opt = getopt(argc, argv, "ct:r:s:")) != -1 ) {
+	while( (opt = getopt(argc, argv, "cf:r:s:")) != -1 ) {
 		switch (opt) {
 			case 'c':
 				cheat_flag = 1;
 				break;
-			case 't':
+			case 'f':
 				automatic_play_flag = 1;
 				in = fopen( optarg, "r" );
 				if( NULL == in ) {
@@ -76,7 +76,7 @@ int main( int argc, char *argv[]) {
 				fprintf( stderr, "-c :tryb oszusta, gra uruchamia sie ze wszystkimi minami odkrytymi\n" );
 				fprintf( stderr, "-r file_name :plansza czytana jest z pliku file_name\n" );
 				fprintf( stderr, "-s file_name :plansza i historia ruchow sa zapisywane po grze w pliku file_name\n" );
-				fprintf( stderr, "-t file_name :tryb test - gra automatyczna, plansza i historia ruchow sa czytane z pliku file_name\n" );
+				fprintf( stderr, "-f file_name :tryb test - gra automatyczna, plansza i historia ruchow sa czytane z pliku file_name\n" );
 				return EXIT_FAILURE;
 		}
 	}
