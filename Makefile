@@ -25,15 +25,20 @@ bin/test_board.o: src/test_board.c src/board.c
 bin/test_moveshistory.o: src/test_moveshistory.c src/moveshistory.c
 	cc -o bin/test_moveshistory.o src/test_moveshistory.c src/moveshistory.c
 
-test: bin/test_board.o bin/test_moveshistory.o
+bin/test_game.o: src/test_game.c src/game.c src/userinput.c src/board.c src/moveshistory.c
+	cc -o bin/test_game.o src/test_game.c src/game.c src/userinput.c src/board.c src/moveshistory.c -DTEST
+
+test: bin/test_board.o bin/test_moveshistory.o bin/test_game.o
 	@./bin/test_board.o
 	@echo 
 	@./bin/test_moveshistory.o
 	@echo 
+	@./bin/test_game.o
+	@echo 
 
 
 clean:
-	ls bin/*.o | grep -v game.o | xargs rm
+	ls bin/*.o | grep -v /game.o | xargs rm
 
 gdb: src/main.c src/userinput.c src/board.c src/game.c
 	cc -o bin/game.o src/main.c src/userinput.c src/board.c src/game.c src/moveshistory.c src/saves.c -ggdb

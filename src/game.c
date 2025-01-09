@@ -111,7 +111,8 @@ void generate_indicators( game_t game ) {
 }
 
 game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
-
+	if( n_mines < 1)
+		return 0;
 	game_t game = malloc( sizeof * game );
 	if( NULL == game ) {
 		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie zaalokowac pamieci na game\n" );
@@ -131,17 +132,23 @@ game_t initialize_game( int board_size_x, int board_size_y, int n_mines) {
 	game -> points = 0;
 	game ->correct_moves = -1;
 	if( NULL == game->moves_history ) {
-		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc moves_history\n" );
+		#ifndef TEST
+			fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc moves_history\n" );
+		#endif
 		return NULL;
 	}
 	game->board_core = create_board( board_size_x, board_size_y );
 	if( NULL == game->board_core ) {
-		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc tablicy board_core\n" );
+		#ifndef TEST
+			fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc tablicy board_core\n" );
+		#endif
 		return NULL;
 	}
 	game->board_view = create_board( board_size_x, board_size_y );
 	if( NULL == game->board_view ) {
-		fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc tablicy board_view\n" );
+		#ifndef TEST
+			fprintf( stderr, "[!] game.c/initialize_game: nie udalo sie utworzyc tablicy board_view\n" );
+		#endif
 		return NULL;
 	}
 
@@ -201,6 +208,7 @@ void check_false_flags(game_t game){
 			if(MINE != game->board_core->data[x][y] && game->board_view->data[x][y] == FLAGGED)
 				game->board_view->data[x][y] = FALSE_FLAGGED;
 }
+
 void calculate_points(game_t game, char difficulty){
 	int mltp = 0;
 	switch(difficulty){
