@@ -18,6 +18,13 @@ typedef struct game {
 	int board_size_x;
 	int board_size_y;
 	int flag_ctr;
+	int expected_res;
+	int actual_res;
+	int read_error;
+	char nickname[21];
+	int points;
+	char difficulty;
+	int correct_moves;
 	moves_history_t moves_history;
 	board_t board_core;
 	board_t board_view;
