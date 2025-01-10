@@ -1,0 +1,16 @@
+restore_board_autoplay:
+
+test_1_x: dane poprawne:
+    test_1_1: gra wygrana
+    test_1_2: gra przegrana
+    test_1_3: gra nierozstrzygnięta
+
+test_2_x: dane niepoprawne:
+    test_2_1: zbyt mało wartości w linijce 1 (brak drugiego wymiaru planszy)
+    test_2_2: zbyt dużo wartości w linijce 1 (dodatkowa liczba)
+    test_2_3: zbyt mała ilość min
+    test 2_4: zbyt duża ilość min
+    test 2_5: jeden z ruchów nie ma kompletu informacji
+    test 2_6: pusty plik
+
+append_to_leaderboard:

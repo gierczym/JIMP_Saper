@@ -28,12 +28,16 @@ bin/test_moveshistory.o: src/test_moveshistory.c src/moveshistory.c
 bin/test_game.o: src/test_game.c src/game.c src/userinput.c src/board.c src/moveshistory.c
 	cc -o bin/test_game.o src/test_game.c src/game.c src/userinput.c src/board.c src/moveshistory.c -DTEST
 
-test: bin/test_board.o bin/test_moveshistory.o bin/test_game.o
+bin/test_saves.o: src/test_saves.c src/game.c src/saves.c src/board.c src/moveshistory.c
+	cc -o bin/test_saves.o src/test_saves.c src/game.c src/saves.c src/board.c src/moveshistory.c -DTEST
+test: bin/test_board.o bin/test_moveshistory.o bin/test_game.o bin/test_saves.o
 	@./bin/test_board.o
 	@echo 
 	@./bin/test_moveshistory.o
 	@echo 
 	@./bin/test_game.o
+	@echo 
+	@./bin/test_saves.o
 	@echo 
 
 

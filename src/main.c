@@ -28,8 +28,8 @@ int main( int argc, char *argv[]) {
 	
 	if(NULL == (leaderboard = fopen("data/leaderboard.dat", "r"))){
 		printf("Nie wykryto pliku 'data/leaderboard.dat', próba utworzonia nowego...\n");
-		fopen("data/leaderboard.dat", "w");
-		if(NULL == (leaderboard = fopen("data/leaderboard.dat", "r"))){
+		leaderboard = fopen("data/leaderboard.dat", "w");
+		if(NULL == leaderboard){
 			printf("Nie udało się utworzyć pliku data/leaderboard.dat, sprawdź, czy folder data istnieje\n");
 			return EXIT_FAILURE;
 		}
@@ -102,13 +102,9 @@ int main( int argc, char *argv[]) {
 	}
 	else if (automatic_play_flag){
 		game = restore_board_autoplay(in);
-		if(NULL == game || game->read_error)
+		if(NULL == game)
 			return EXIT_FAILURE;
 		difficulty = game -> difficulty;
-		if(game->read_error == 1){
-			free_game_without_move_hst(game);
-			return EXIT_FAILURE;
-		}
 		calculate_points(game, game->difficulty);
 		printf("Poprawne kroki: %d, punkty: %d, wynik: %d\n", game->correct_moves, game->points, game->actual_res);
 		return 0;

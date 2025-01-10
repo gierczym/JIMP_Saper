@@ -64,15 +64,17 @@ game_t restore_board(FILE *in){
 	game->moves_history = init_moves_history( 10 );
 	game -> read_error = 0;
 	game->correct_moves = -1;
-    if(fscanf(in, "%d, %d, %d, %d, %c\n", &game->board_size_x, &game->board_size_y, &game -> n_mines, &game -> expected_res, &game -> difficulty) < 5){
+
+	char separator;
+	int mines_read = 0;
+    if(fscanf(in, "%d, %d, %d, %d, %c%c", &game->board_size_x, &game->board_size_y, &game -> n_mines, &game -> expected_res, &game -> difficulty, &separator) != 6 || separator != '\n'){
 		free(game);
-		printf("[!] saves.c/restore_board: błąd wczytywania pierwszej linii pliku, otrzymano mniej niż 5 wartości\n");
+		printf("[!] saves.c/restore_board: błąd wczytywania pierwszej linii pliku, otrzymano inną ilość wartości niż 5\n");
 		return NULL;
 	}
-    game->pos_x = game -> board_size_x / 2;
-	game->pos_y = game -> board_size_y / 2;
 
-	
+    game->pos_x = game -> board_size_x / 2;
+	game->pos_y = game -> board_size_y / 2;	
 
     game->board_core = create_board( game -> board_size_x, game -> board_size_y );
 	if( NULL == game->board_core ) {
@@ -82,22 +84,42 @@ game_t restore_board(FILE *in){
 	}
 	game->board_view = create_board( game -> board_size_x, game -> board_size_y );
 	if( NULL == game->board_view ) {
-		free(game->board_core->data);
-		free(game->board_core);
-		free(game);
 		fprintf( stderr, "[!] saves.c/restore_board: nie udalo sie utworzyc tablicy board_view\n" );
-		return NULL;
+		game->read_error = 1;
+		return game;
 	}
-    for(int i = 0; i < game -> n_mines; i++){
+	char potential_separator;
+    while(1){
         int x, y;
-        if(fscanf(in, "%d %d, ", &x, &y) < 2){
+        if(fscanf(in, "%d %d%c%c", &x, &y, &separator, &potential_separator) < 3){
 			printf("[!] saves.c/restore_board: błąd wczytywania drugiej linii pliku, otrzymano mniej niż 2 koordynaty położenia bomby\n");
 			game -> read_error = 1;
 			return game;
 		}
+		
+		if(separator != ','){
+			if(mines_read != game->n_mines){
+				printf("[!] saves.c/restore_board: błąd wczytywania drugiej linii pliku, wczytano za małą ilość min, oczekiwano: %d, przeczytano: %d\n", game->n_mines, mines_read);
+				game->read_error = 1;
+				return game;
+			}
+		}
+		mines_read++;
+		if(mines_read == game->n_mines+1){
+			if(potential_separator != '\n'){
+				break;
+			}
+			else{
+				printf("[!] saves.c/restore_board: błąd wczytywania drugiej linii pliku, wczytano za dużą ilość min, oczekiwano: %d, przeczytano: %d\n", game->n_mines, mines_read);
+				game->read_error = 1;
+				return game;
+			}
+		}
         game -> board_core -> data[x][y] = MINE;
     }
+	
     generate_indicators(game);
+	fseek(in, sizeof(char)*(-5), SEEK_CUR);
     return game;
 }
 
@@ -114,13 +136,16 @@ game_t restore_board_autoplay(FILE *in){
 	char command;	
 	int scan_res;
 	while(scan_res = fscanf(in, "%d %d %c,", &x, &y, &command)){
-		if(scan_res < 3 && scan_res > 0){
-			printf("[!] saves.c/restore_board: błąd wczytywania trzeciej linii pliku, otrzymano mniej niż 3 parametry ruchu");
-			game->read_error = 1;
-			return game;
-		}
-		else if(scan_res <= 0)
+		//printf("x = %d, y = %d, com = %c", x, y, command);
+		if(scan_res <= 0)
 			break;
+		else if(scan_res != 3){
+			printf("[!] saves.c/restore_board: błąd wczytywania trzeciej linii pliku, nie otrzymano 3 parametrów ruchu\n");
+			free_game_without_move_hst(game);
+			game->read_error = 1;
+			return NULL;
+		}
+		
 		game -> pos_x = x;
 		game -> pos_y = y;
 		switch(execute_command(game, command, 1)){
